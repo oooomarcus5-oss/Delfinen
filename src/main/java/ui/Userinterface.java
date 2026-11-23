@@ -1,9 +1,14 @@
 package ui;
 
+import domainmodel.MemberCollection;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Userinterface {
     Scanner scanner = new Scanner(System.in);
+    MemberCollection memberCollection = new MemberCollection();
 
 
     public void start(){
@@ -31,6 +36,27 @@ public class Userinterface {
             } catch (NumberFormatException e) {
                 System.out.println("\"" + input + "\" er ikke et helt tal. Prøv igen.");
             }
+        }
+    }
+    private void addMember(){
+        System.out.println("Indtast fornavn: ");
+        String firstName = scanner.nextLine();
+
+        System.out.println("Indtast efternavn: ");
+        String lastName = scanner.nextLine();
+
+        try{
+            System.out.println("Indtast fødselsdato (yyyy-mm-dd): ");
+            LocalDate birthday = LocalDate.parse(scanner.nextLine());
+
+            memberCollection.addMember(firstName, lastName, birthday);
+            System.out.println("Medlem oprettet.");
+        }
+        catch(DateTimeParseException e){
+            System.out.println("Fejl: Fødselsdatoen har et ugyldigt format.");
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println("Fejl: " + e.getMessage());
         }
     }
 
