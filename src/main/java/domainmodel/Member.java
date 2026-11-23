@@ -10,7 +10,7 @@ public class Member {
     private static int nextId = 1;
     private int memberId;
 
-    public Member(String firstName, String lastName, LocalDate birthday){
+    public Member(String firstName, String lastName, LocalDate birthday) {
         this.memberId = nextId;
         nextId++;
         this.firstName = firstName;
@@ -18,16 +18,19 @@ public class Member {
         setBirthday(birthday);
     }
 
-    public String getName(){
+    public String getName() {
         return firstName + " " + lastName;
     }
-    public void setFirstName(String firstName){
+
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    public void setLastName(String lastName){
+
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    public int getMemberId(){
+
+    public int getMemberId() {
         return memberId;
     }
 
@@ -35,21 +38,51 @@ public class Member {
         return birthday;
     }
 
-    public int getAge(LocalDate date){
+    public int getAge(LocalDate date) {
         long years = ChronoUnit.YEARS.between(birthday, date);
         return (int) years;
     }
+
     public void setBirthday(LocalDate birthday) {
-        if(birthday.isAfter(LocalDate.now())){
+        if (birthday.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("Fødselsdag må ikke være i fremtiden.");
         }
         this.birthday = birthday;
     }
-    public String getInfo(){
+
+    public String getInfo() {
         String result = "\n";
         result += "Medlemsnummer: " + this.memberId + ", ";
         result += "\nNavn: " + this.getName();
         result += "\nAlder: " + this.getAge(LocalDate.now()) + " år";
         return result;
+    }
+
+    private boolean active = true;
+    private boolean paid;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+
+    public double getAnnualFee() {
+        if (!active) return 500;
+        int age = getAge(LocalDate.now());
+        if (age < 18) return 1000;
+        if (age >= 60) return 1600 * 0.75;
+        return 1600;
     }
 }

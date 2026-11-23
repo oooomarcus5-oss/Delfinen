@@ -19,5 +19,20 @@ public class MemberCollection {
     }
 
 
-
+    public double calculateExpectedIncome() {
+        double sum = 0;
+        for (Member m : members) {
+            sum += m.getAnnualFee();
+        }
+        return sum;
+    }
+    public boolean registerPayment(int memberId) {
+        for (Member m : members) {
+            if (m.getMemberId() == memberId) {
+                m.setPaid(true);
+                return true;
+            }
+        }
+        return false;
+    }
 }
