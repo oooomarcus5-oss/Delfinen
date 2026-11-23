@@ -36,8 +36,8 @@ public class Member {
     }
 
     public int getAge(LocalDate date){
-        long days = ChronoUnit.DAYS.between(birthday, date);
-        return (int) (days / 365);
+        long years = ChronoUnit.YEARS.between(birthday, date);
+        return (int) years;
     }
     public void setBirthday(LocalDate birthday) {
         if(birthday.isAfter(LocalDate.now())){
