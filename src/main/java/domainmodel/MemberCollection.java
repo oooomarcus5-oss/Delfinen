@@ -10,8 +10,8 @@ public class MemberCollection {
         members = new ArrayList<>();
     }
 
-    public void addMember(String firstName, String lastName, LocalDate birthday){
-        Member member = new Member(firstName, lastName, birthday);
+    public void addMember(String firstName, String lastName, LocalDate birthday, MembershipType membershipType, ActivityForm activityForm){
+        Member member = new Member(firstName, lastName, birthday, membershipType, activityForm);
         members.add(member);
     }
     public ArrayList<Member> getMembers(){

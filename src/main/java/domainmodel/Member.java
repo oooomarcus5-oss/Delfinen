@@ -7,17 +7,23 @@ public class Member {
     private String firstName;
     private String lastName;
     private LocalDate birthday;
+    private MembershipType membershipType;
+    private ActivityForm activityForm;
     private static int nextId = 1;
     private int memberId;
+    private boolean paid;
 
-    public Member(String firstName, String lastName, LocalDate birthday) {
+    public Member(String firstName, String lastName, LocalDate birthday, MembershipType membershipType, ActivityForm activityForm) {
         this.memberId = nextId;
         nextId++;
         this.firstName = firstName;
         this.lastName = lastName;
         setBirthday(birthday);
+        setMembershipType(membershipType);
+        setActivityForm(activityForm);
+        this.memberId = nextId;
+        nextId++;
     }
-
     public String getName() {
         return firstName + " " + lastName;
     }
@@ -42,12 +48,32 @@ public class Member {
         long years = ChronoUnit.YEARS.between(birthday, date);
         return (int) years;
     }
-
     public void setBirthday(LocalDate birthday) {
         if (birthday.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("Fødselsdag må ikke være i fremtiden.");
         }
         this.birthday = birthday;
+    }
+    private void validateMembership(MembershipType type, ActivityForm form){
+        if (type == MembershipType.PASSIVE && form != ActivityForm.NONE){
+            throw new IllegalArgumentException("Et passivt medlem kan ikke være Motionist eller Konkurrencesvømmer");
+        }
+        if (type == MembershipType.ACTIVE && form == ActivityForm.NONE){
+            throw new IllegalArgumentException("Et Aktivt medlem skal enten være Motionist eller Konkurrencesvømmer");
+        }
+    }
+
+    public void setMembershipType(MembershipType membershipType){
+        this.membershipType = membershipType;
+    }
+    public MembershipType getMembershipType() {
+        return membershipType;
+    }
+    public void setActivityForm(ActivityForm activityForm){
+        this.activityForm = activityForm;
+    }
+    public ActivityForm getActivityForm() {
+        return activityForm;
     }
 
     public String getInfo() {
@@ -58,15 +84,8 @@ public class Member {
         return result;
     }
 
-    private boolean active = true;
-    private boolean paid;
-
     public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+        return membershipType == MembershipType.ACTIVE;
     }
 
     public boolean isPaid() {
@@ -79,7 +98,7 @@ public class Member {
 
 
     public double getAnnualFee() {
-        if (!active) return 500;
+        if (!isActive()) return 500;
         int age = getAge(LocalDate.now());
         if (age < 18) return 1000;
         if (age >= 60) return 1600 * 0.75;
