@@ -1,11 +1,13 @@
 package ui;
 
 import domainmodel.ActivityForm;
+import domainmodel.Member;
 import domainmodel.MemberCollection;
 import domainmodel.MembershipType;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Userinterface {
@@ -17,6 +19,7 @@ public class Userinterface {
         boolean running = true;
         while (running) {
             System.out.println("\n1. Opret nyt medlem");
+            System.out.println("5. se medlemsoversigt");
             System.out.println("7. Se forventet kontingentindtægt");
             System.out.println("8. Registrer kontingentbetaling");
             System.out.println("0. Afslut");
@@ -24,9 +27,10 @@ public class Userinterface {
             int choice = readInt("Vælg: ");
             switch (choice) {
                 case 1 -> addMember();
+                case 5 -> showMember();
                 case 7 -> showExpectedIncome();
                 case 8 -> registerPayment();
-                case 2 -> running = false;
+                case 0 -> running = false;
                 default -> System.out.println("Ukendt valg, vælg igen.");
             }
         }
@@ -35,6 +39,16 @@ public class Userinterface {
     private void showExpectedIncome() {
         double total = memberCollection.calculateExpectedIncome();
         System.out.println("Forventet kontingentindtægt: " + total + " kr.");
+    }
+    private void showMember(){
+        ArrayList<Member> members = memberCollection.getMembers();
+        if (members.isEmpty()){
+            System.out.println("Der er ingen medlemmer endnu.");
+            return;
+        }
+        for (Member member : members) {
+           System.out.println(member.getInfo());
+        }
     }
 
     private void registerPayment() {

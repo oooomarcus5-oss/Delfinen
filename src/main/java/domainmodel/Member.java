@@ -14,8 +14,6 @@ public class Member {
     private boolean paid;
 
     public Member(String firstName, String lastName, LocalDate birthday, MembershipType membershipType, ActivityForm activityForm) {
-        this.memberId = nextId;
-        nextId++;
         this.firstName = firstName;
         this.lastName = lastName;
         setBirthday(birthday);
@@ -48,6 +46,9 @@ public class Member {
         long years = ChronoUnit.YEARS.between(birthday, date);
         return (int) years;
     }
+    public boolean isJunior(LocalDate date) {
+        return getAge(date) < 18;
+    }
     public void setBirthday(LocalDate birthday) {
         if (birthday.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("Fødselsdag må ikke være i fremtiden.");
@@ -78,9 +79,25 @@ public class Member {
 
     public String getInfo() {
         String result = "\n";
-        result += "Medlemsnummer: " + this.memberId + ", ";
+        result += "Medlemsnummer: " + this.memberId;
         result += "\nNavn: " + this.getName();
         result += "\nAlder: " + this.getAge(LocalDate.now()) + " år";
+        String group;
+        if (isJunior(LocalDate.now())){
+            group = "Junior";
+        } else {
+            group = "Senior";
+        }
+        result += "\nGruppe: " + group;
+        String type;
+        if (membershipType == MembershipType.PASSIVE) {
+            type = "Passiv";
+        } else if (activityForm == ActivityForm.EXERCISER){
+            type = "Motionist";
+        } else {
+            type = "Konkurrencesvømmer";
+        }
+        result += "\nMedlemstype: " + type;
         return result;
     }
 
