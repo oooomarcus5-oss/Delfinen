@@ -1,6 +1,8 @@
 package ui;
 
+import domainmodel.ActivityForm;
 import domainmodel.MemberCollection;
+import domainmodel.MembershipType;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -12,16 +14,16 @@ public class Userinterface {
 
 
     public void start() {
-        System.out.println("1. Opret nyt medlem");
-        System.out.println("7. Se forventet kontingentindtægt");
-        System.out.println("8. Registrer kontingentbetaling");
-        System.out.println("0. Afslut");
-
         boolean running = true;
-        int choice = readInt("Vælg: ");
         while (running) {
+            System.out.println("\n1. Opret nyt medlem");
+            System.out.println("7. Se forventet kontingentindtægt");
+            System.out.println("8. Registrer kontingentbetaling");
+            System.out.println("0. Afslut");
+
+            int choice = readInt("Vælg: ");
             switch (choice) {
-                case 1 -> System.out.println("Opret medlem");
+                case 1 -> addMember();
                 case 7 -> showExpectedIncome();
                 case 8 -> registerPayment();
                 case 2 -> running = false;
@@ -29,10 +31,12 @@ public class Userinterface {
             }
         }
     }
+
     private void showExpectedIncome() {
         double total = memberCollection.calculateExpectedIncome();
         System.out.println("Forventet kontingentindtægt: " + total + " kr.");
     }
+
     private void registerPayment() {
         int memberId = readInt("Indtast medlemsnummer: ");
         if (memberCollection.registerPayment(memberId)) {
@@ -64,8 +68,10 @@ public class Userinterface {
         try {
             System.out.println("Indtast fødselsdato (yyyy-mm-dd): ");
             LocalDate birthday = LocalDate.parse(scanner.nextLine());
+            MembershipType membershipType = readMembershipType();
+            ActivityForm activityForm = readActivityForm(membershipType);
 
-            memberCollection.addMember(firstName, lastName, birthday);
+            memberCollection.addMember(firstName, lastName, birthday, membershipType, activityForm);
             System.out.println("Medlem oprettet.");
         } catch (DateTimeParseException e) {
             System.out.println("Fejl: Fødselsdatoen har et ugyldigt format.");
@@ -74,6 +80,31 @@ public class Userinterface {
         }
     }
 
-}
+    private MembershipType readMembershipType() {
+        while (true) {
+            int choice = readInt("Vælg medlemskab (1 = Aktivt, 2 = Passivt): ");
+            if (choice == 1) {
+                return MembershipType.ACTIVE;
+            } else if (choice == 2) {
+                return MembershipType.PASSIVE;
+            }
+            System.out.println("Ugyldigt valg. Prøv igen.");
+        }
+    }
 
+    private ActivityForm readActivityForm(MembershipType type) {
+        if (type == MembershipType.PASSIVE) {
+            return ActivityForm.NONE;
+        }
+        while (true) {
+            int choice = readInt("Vælg Aktivitets niveau (1= motionist, 2 = Konkurrencesvømmer): ");
+            if (choice == 1) {
+                return ActivityForm.EXERCISER;
+            } else if (choice == 2) {
+                return ActivityForm.COMPETITIVE;
+            }
+            System.out.println("Ugyldigt valg. Prøv igen.");
+        }
+    }
+}
 
