@@ -14,9 +14,19 @@ public class MemberCollection {
         Member member = new Member(firstName, lastName, birthday, membershipType, activityForm);
         members.add(member);
     }
+    public ArrayList<Member> getUnpaidMembers(){
+        ArrayList<Member> unpaidMembers = new ArrayList<>();
+        for (Member m : members ) {
+            if (!m.isPaid()) {
+                unpaidMembers.add(m);
+            }
+        }
+        return unpaidMembers;
+    }
     public ArrayList<Member> getMembers(){
         return members;
     }
+
 
 
     public double calculateExpectedIncome() {

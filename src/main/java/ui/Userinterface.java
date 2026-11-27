@@ -19,9 +19,10 @@ public class Userinterface {
         boolean running = true;
         while (running) {
             System.out.println("\n1. Opret nyt medlem");
-            System.out.println("5. se medlemsoversigt");
+            System.out.println("5. Se medlemsoversigt");
             System.out.println("7. Se forventet kontingentindtægt");
             System.out.println("8. Registrer kontingentbetaling");
+            System.out.println("9. Se medlemmer i restance");
             System.out.println("0. Afslut");
 
             int choice = readInt("Vælg: ");
@@ -30,6 +31,7 @@ public class Userinterface {
                 case 5 -> showMember();
                 case 7 -> showExpectedIncome();
                 case 8 -> registerPayment();
+                case 9 -> showUnpaidMembers();
                 case 0 -> running = false;
                 default -> System.out.println("Ukendt valg, vælg igen.");
             }
@@ -50,7 +52,16 @@ public class Userinterface {
            System.out.println(member.getInfo());
         }
     }
-
+    private void showUnpaidMembers(){
+        ArrayList<Member> unpaidMembers = memberCollection.getUnpaidMembers();
+        if (unpaidMembers.isEmpty()){
+            System.out.println("Der er ingen medlemmer der mangler at betale kontingent");
+            return;
+        }
+        for (Member member: unpaidMembers){
+            System.out.println("Nr: " + member.getMemberId() + " " + member.getName() + " Kr." + member.getAnnualFee());
+        }
+    }
     private void registerPayment() {
         int memberId = readInt("Indtast medlemsnummer: ");
         if (memberCollection.registerPayment(memberId)) {

@@ -113,7 +113,6 @@ public class Member {
         this.paid = paid;
     }
 
-
     public double getAnnualFee() {
         if (!isActive()) return 500;
         int age = getAge(LocalDate.now());
